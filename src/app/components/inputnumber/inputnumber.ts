@@ -266,7 +266,7 @@ export class InputNumber implements OnInit,ControlValueAccessor {
             this.focused = false;
 
         this._disabled = disabled;
-        
+
         if (this.timer)
             this.clearTimer();
     }
@@ -875,13 +875,16 @@ export class InputNumber implements OnInit,ControlValueAccessor {
         let inputValue = this.input.nativeElement.value;
         let newValue = this.formatValue(value);
         let currentLength = inputValue.length;
+        let isMinusSignStart = inputValue === '-';
 
-        if (currentLength === 0) {
+        // Check and handle input starting as minus sign
+        if (currentLength === 0 || isMinusSignStart) {
             this.input.nativeElement.value = newValue;
             this.input.nativeElement.setSelectionRange(0, 0);
             this.initCursor();
             const prefixLength = (this.prefixChar || '').length;
-            const selectionEnd = prefixLength + insertedValueStr.length;
+            const minusSignLength = isMinusSignStart ? 1 : 0;
+            const selectionEnd = prefixLength + insertedValueStr.length + minusSignLength;
             this.input.nativeElement.setSelectionRange(selectionEnd, selectionEnd);
         }
         else {
